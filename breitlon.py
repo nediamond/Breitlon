@@ -3,8 +3,6 @@ from bs4 import BeautifulSoup
 from random import shuffle
 from pprint import pprint as pp
 
-# TODO: Combine the data from these lists into a single webpage called "Breitlon"
-
 def get_article_list():
 	# Scraping Salon
 
