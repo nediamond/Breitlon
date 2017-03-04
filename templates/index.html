@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Breitlon</title>
+	  <style>
+		body{
+			background-color:grey;
+		}
+		.title_img{
+			max-width:450px;
+			display:block;
+			margin-left:auto;
+			margin-right:auto;
+			padding:10px 0px 15px 0px;
+		}
+		tr{
+			font-size:18pt;
+			border: 3px solid black;
+		}
+		a {color: #000;}
+		<!-- a:hover {color: #800080;} -->
+	  </style>
+  </head>
+  <body style="border:0px;">
+	<div class="container">
+		<!-- <h1>Breitlon</h1> -->
+		<img class="title_img" src="{{ url_for('static', filename='breitlon.png') }}">
+		<table class="table table-bordered">
+		{% for article in article_list %}
+			{% if article.3 == 'bb' %}
+				<tr class="danger">
+						<td><a href="{{ article.2 }}">{{ article.0 }}</a></td>
+						<td>{{ article.1 }}</td>
+				</tr>
+			{% else %}
+				<tr class="info">
+						<td><a href="{{ article.2 }}">{{ article.0 }}</a></td>
+						<td>{{ article.1 }}</td>
+				</tr>
+			{% endif %}
+		{% endfor %}
+		</table>
+	</div>
+  </body>
+ </html>
