@@ -2,18 +2,24 @@ import urllib
 from bs4 import BeautifulSoup
 from random import shuffle
 from pprint import pprint as pp
+import json
 
 def get_article_list():
 	# Scraping Salon
 
 	html = urllib.urlopen("http://www.salon.com/").read()
-	soup = BeautifulSoup(html, "html.parser")
+	#soup = BeautifulSoup(html, "html.parser")
 
-	articles = soup.find_all('div', {'class':'story-info'})
+	state = json.loads(html.split("window.__INITIAL_STATE__ = ")[1].split(";</script>")[0])
+	articles = state['posts']['priority']['data']['posts']
 	sal_article_data = []
 	for article in articles:
 		try:
-			sal_article_data.append((article.a['title'], getattr(article.span.string,'strip',lambda: "")(), article.a['href']))
+			if len(article['writers']) > 0:
+				author = article['writers'][0]['name']
+			else:
+				author = ""
+			sal_article_data.append((article['title'], author, article['url']))
 		except KeyError:
 			continue
 			
