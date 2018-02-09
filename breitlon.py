@@ -10,7 +10,7 @@ def get_article_list():
 	html = urllib.urlopen("http://www.salon.com/").read()
 	#soup = BeautifulSoup(html, "html.parser")
 
-	state = json.loads(html.split("window.__INITIAL_STATE__ = ")[1].split(";</script>")[0])
+	state = json.loads(html.split("window.__INITIAL_STATE__ = ")[1].split("}}};")[0]+'}}}')
 	articles = state['posts']['priority']['data']['posts']
 	sal_article_data = []
 	for article in articles:
