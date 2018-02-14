@@ -37,7 +37,7 @@ def get_article_list():
 		print dir(article)
 		print article.h2
 		byline = article.find('p', {'class':'byline'})
-		if byline: byline = byline.a.string
+		byline = byline.a.string if byline else ''
 		try:
 			breit_article_data.append((article.h2.a['title'], byline, "http://www.breitbart.com"+article.h2.a['href']))
 		except KeyError:
