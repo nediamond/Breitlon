@@ -33,8 +33,13 @@ def get_article_list():
 	articles = soup.find_all('article')
 	breit_article_data =[]
 	for article in articles:
+		print article
+		print dir(article)
+		print article.h2
+		byline = article.find('p', {'class':'byline'})
+		if byline: byline = byline.a.string
 		try:
-			breit_article_data.append((article.h2.a['title'], article.find('p', {'class':'byline'}).a.string, "http://www.breitbart.com"+article.h2.a['href']))
+			breit_article_data.append((article.h2.a['title'], byline, "http://www.breitbart.com"+article.h2.a['href']))
 		except KeyError:
 			continue
 		
