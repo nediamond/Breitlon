@@ -34,7 +34,7 @@ def get_article_list():
 	breit_article_data =[]
 	for article in articles:
 		byline = article.find('address')
-		byline = byline['data-aname'].capitalize() if byline else ''
+		byline = byline['data-aname'].title() if byline else ''
 		link = article.find('a')
 		title = link.text if link.text else article.find('footer').text
 		try:
