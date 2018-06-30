@@ -1,4 +1,4 @@
-import urllib
+import requests
 from bs4 import BeautifulSoup
 from random import shuffle
 from pprint import pprint as pp
@@ -7,11 +7,11 @@ import json
 def get_article_list():
 	# Scraping Salon
 
-	html = urllib.urlopen("http://www.salon.com/").read()
+	json_page = requests.get("https://api.salon.com/v4/posts/priority/page/1").text
 	#soup = BeautifulSoup(html, "html.parser")
 
-	state = json.loads(html.split("window.__INITIAL_STATE__ = ")[1].split("}}};")[0]+'}}}')
-	articles = state['posts']['priority']['data']['posts']
+	state = json.loads(json_page)
+	articles = state['result']['posts']
 	sal_article_data = []
 	for article in articles:
 		try:
@@ -26,28 +26,21 @@ def get_article_list():
 			
 	# Scraping Breitbart
 
-	html = urllib.urlopen("http://www.breitbart.com/").read()
+	html = requests.get("http://www.breitbart.com/").text
 	soup = BeautifulSoup(html, "html.parser")
 
 	# Main Articles
 	articles = soup.find_all('article')
 	breit_article_data =[]
 	for article in articles:
-		print article
-		print dir(article)
-		print article.h2
-		byline = article.find('p', {'class':'byline'})
-		byline = byline.a.string if byline else ''
+		byline = article.find('address')
+		byline = byline['data-aname'].capitalize() if byline else ''
+		link = article.find('a')
+		title = link.text if link.text else article.find('footer').text
 		try:
-			breit_article_data.append((article.h2.a['title'], byline, "http://www.breitbart.com"+article.h2.a['href']))
+			breit_article_data.append((title, byline, "http://www.breitbart.com"+link['href']))
 		except KeyError:
 			continue
-		
-	# Trending Now
-	trending_articles = soup.find('ul',{'id':'BBTrendUL'}).find_all('li')
-	for article in trending_articles:
-		breit_article_data.append((article.a['title'], "", article.a['href']))
-		
 		
 	sarts = map(lambda x: x+('s',), sal_article_data)
 	barts = map(lambda x: x+('bb',), breit_article_data)
