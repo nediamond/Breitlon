@@ -7,21 +7,18 @@ import json
 def get_article_list():
 	# Scraping Salon
 
-	json_page = requests.get("https://api.salon.com/v4/posts/priority/page/1").text
-	#soup = BeautifulSoup(html, "html.parser")
+	html = requests.get("http://www.salon.com/").text
+	soup = BeautifulSoup(html, "html.parser")
 
-	state = json.loads(json_page)
-	articles = state['result']['posts']
+	articles = soup.find_all(class_="latest-link") + soup.find_all(class_="card-article")
 	sal_article_data = []
 	for article in articles:
-		try:
-			if len(article['writers']) > 0:
-				author = article['writers'][0]['name']
-			else:
-				author = ""
-			sal_article_data.append((article['title'], author, article['url']))
-		except KeyError:
-			continue
+		author = getattr(article.find(class_="writer"),'text', '')
+		title = article.text.strip()
+		if not title: continue
+		if author: title = title.replace(author, '').strip()
+		link = (article.find('a') or article)['href']
+		sal_article_data.append((title, author, link))
 			
 			
 	# Scraping Breitbart
